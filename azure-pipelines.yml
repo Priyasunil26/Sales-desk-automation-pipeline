@@ -46,7 +46,7 @@ jobs:
       targetType: 'inline'
       script: |
           if [ -f $(Pipeline.Workspace)/param_value.txt ]; then
-            URL='https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt'
+            URL=$(awk '/KubernetesPackage:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
             echo "Text File URL: $URL"
             IMAGE_TAG=$(echo "$URL" | grep -oP 'Linux_Kubernetes_\K[\d\.]+_\d{8}_\d{6}')
             echo "##vso[task.setvariable variable=TAG]$IMAGE_TAG"
