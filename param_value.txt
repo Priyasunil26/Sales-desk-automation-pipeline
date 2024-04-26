@@ -10,6 +10,7 @@ Azure: True
 Branch: hotfix/boldbi_v7 
 DockerImage: None 
 KubernetesImage: True 
+KubernetesSiteUpdate: True
 AzureGitToken: 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 
 AzureGitEmail: sivanesan.saravanan@syncfusion.com 
 AzureGitName: SivanesanSyncfusion 
