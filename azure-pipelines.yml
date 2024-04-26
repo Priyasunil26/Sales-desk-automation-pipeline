@@ -35,11 +35,9 @@ jobs:
       echo "$BranchName"
       echo "##vso[task.setvariable variable=Branch]$BranchName"
     displayName: 'Assign k8s values'
-  
   - task: Bash@3
-   inputs:
-     targetType: 'inline'
-     script: wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt
+    inputs:
+      filePath: 'wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt'
       
   - task: Bash@3
     inputs:
