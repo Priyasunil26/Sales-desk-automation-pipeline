@@ -1,0 +1,15 @@
+WindowsPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_7.8.12_1129.exe
+KubernetesPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_Linux_Kubernetes_7.8.12_04242024_112938.zip
+LinuxPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_Linux_7.8.12_04242024_112938.zip
+AzurePackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_AzurePackage_7.8.12_04242024_112938.zip
+Docker: False 
+Kubernetes: True 
+Linux: True 
+Windows: True 
+Azure: True 
+Branch: hotfix/boldbi_v7 
+DockerImage: None 
+KubernetesImage: True 
+AzureGitToken: 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 
+AzureGitEmail: sivanesan.saravanan@syncfusion.com 
+AzureGitName: SivanesanSyncfusion 
