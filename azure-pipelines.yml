@@ -46,7 +46,7 @@ jobs:
       targetType: 'inline'
       script: |
           if [ -f $(Pipeline.Workspace)/param_value.txt ]; then
-            URL=$(awk '/KubernetesPackage:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+            URL='https://raw.githubusercontent.com/yourusername/yourrepository/main/path/to/your/file.txt'
             echo "Text File URL: $URL"
             IMAGE_TAG=$(echo "$URL" | grep -oP 'Linux_Kubernetes_\K[\d\.]+_\d{8}_\d{6}')
             echo "##vso[task.setvariable variable=TAG]$IMAGE_TAG"
@@ -60,6 +60,7 @@ jobs:
             echo "Bold BI Kubernetes Linux Package Does Not Exist"
           fi
     continueOnError: true
+
 
   - task: Docker@2
     inputs:
