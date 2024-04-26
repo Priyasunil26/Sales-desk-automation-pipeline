@@ -40,15 +40,16 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-          if [ -f "$(Pipeline.Workspace)/param_value.txt" ]; then
-            URL='https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt'
+          if [ -f $(Pipeline.Workspace)/param_value.txt ]; then
+            URL=$(awk '/KubernetesPackage:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
             echo "Text File URL: $URL"
             IMAGE_TAG=$(echo "$URL" | grep -oP 'Linux_Kubernetes_\K[\d\.]+_\d{8}_\d{6}')
             echo "##vso[task.setvariable variable=TAG]$IMAGE_TAG"
             echo Y | gcloud auth configure-docker us-central1-docker.pkg.dev
-            sudo wget $URL -O /tmp/param_value.txt
-            sudo apt install -y unzip 
-            sudo unzip /tmp/param_value.txt -d /tmp/
+            sudo wget $URL
+            sudo rm -rf $(Pipeline.Workspace)/param_value.txt
+            sudo apt install unzip 
+            sudo unzip BoldBIEnterpriseEdition_Linux_*
             echo Y | gcloud auth configure-docker us-central1-docker.pkg.dev
           else
             echo "Bold BI Kubernetes Linux Package Does Not Exist"
