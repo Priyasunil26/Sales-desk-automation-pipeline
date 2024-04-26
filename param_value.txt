@@ -1,5 +1,5 @@
 WindowsPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_7.8.12_1129.exe
-KubernetesPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_Linux_Kubernetes_7.8.12_04242024_112938.zip
+KubernetesPackage: http://files2.syncfusion.com/Installs/BoldBI/BoldBI_salesdesk_v7.5/08-04-2024/BoldBIEnterpriseEdition_Linux_7.5.23_04082024_081502.zip
 LinuxPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_Linux_7.8.12_04242024_112938.zip
 AzurePackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/25-04-2024/BoldBIEnterpriseEdition_AzurePackage_7.8.12_04242024_112938.zip
 Docker: False 
