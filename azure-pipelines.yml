@@ -14,19 +14,23 @@ jobs:
   pool:
    vmImage: ubuntu-latest
   steps:
-  - task: DownloadPipelineArtifact@2 
-    inputs: 
-      buildType: 'specific'
-      project: 'a7a9079d-03ad-44f5-8677-e9ec44b5ba3d' 
-      definition: '12' 
-      specificBuildWithTriggering: true
-      buildVersionToDownload: 'latest'
-      allowPartiallySucceededBuilds: true 
-      allowFailedBuilds: true 
-      artifactName: 'manifest'
-      targetPath: '$(Pipeline.Workspace)'
-    continueOnError: true
-    
+  # - task: DownloadPipelineArtifact@2 
+  #   inputs: 
+  #     buildType: 'specific'
+  #     project: 'a7a9079d-03ad-44f5-8677-e9ec44b5ba3d' 
+  #     definition: '12' 
+  #     specificBuildWithTriggering: true
+  #     buildVersionToDownload: 'latest'
+  #     allowPartiallySucceededBuilds: true 
+  #     allowFailedBuilds: true 
+  #     artifactName: 'manifest'
+  #     targetPath: '$(Pipeline.Workspace)'
+  #   continueOnError: true
+  - script: |
+     wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt -O $(Pipeline.Workspace)/param_value.txt)
+     ls $(Pipeline.Workspace)
+    displayName: 'Assign k8s values'
+     
   - script: |
       KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
       echo "$KubernetesSiteUpdate"
