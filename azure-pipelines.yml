@@ -40,7 +40,7 @@ jobs:
     persistCredentials: true  # Optional if you need to access private repositories
   - script: |
       wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt
-      displayName: 'Download file'
+    displayName: 'Download file'
   - task: Bash@3
     inputs:
       targetType: 'inline'
