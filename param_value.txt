@@ -1,0 +1,12 @@
+KubernetesPackage: https://s3.amazonaws.com/files2.syncfusion.com/Installs/BoldBI/BoldBI_salesdesk_v7.5/27-04-2024/BoldBIEnterpriseEdition_Linux_Kubernetes_7.5.24_04272024_050030.zip
+Docker: False 
+Kubernetes: True 
+Linux: False 
+Windows: False 
+Azure: False 
+Branch: BoldBI_salesdesk_v7.5 
+DockerImage: None 
+KubernetesImage: True 
+AzureGitToken: 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 
+AzureGitEmail: sivanesan.saravanan@syncfusion.com 
+AzureGitName: SivanesanSyncfusion 
