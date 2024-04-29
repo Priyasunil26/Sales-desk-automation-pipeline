@@ -67,30 +67,21 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
-        
-        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-        
-        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
+        pwd
+        echo "whare I am in"
+        ls
+        echo "**************"
+        ls BoldBIEnterpriseEdition-Linux
+        echo "**************"
 
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
-        NEW_APP_PATH="bi/data-scheduler"
-        NEW_LOGGER_NAME="bi.data-scheduler"
-    
-        # Update app-settings.json
-        sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
-        sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
+        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
+        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        echo "**************"
+        ls BoldBIEnterpriseEdition-Linux
+        echo "**************"
 
-        echo "***************************************"
-        cat $APP_SETTINGS_FILE
-        
   - task: Bash@3
     inputs:
       targetType: 'inline'
@@ -100,9 +91,9 @@ jobs:
         ls
         echo "**************"
         # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
-        NEW_APP_PATH="bi/viewer"
-        NEW_LOGGER_NAME="bi.viewer"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
+        NEW_APP_PATH="bi/data-scheduler"
+        NEW_LOGGER_NAME="bi.data-scheduler"
     
         # Update app-settings.json
         sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
