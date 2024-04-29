@@ -26,11 +26,14 @@ jobs:
   #     artifactName: 'manifest'
   #     targetPath: '$(Pipeline.Workspace)'
   #   continueOnError: true
+
   - script: |
      wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt -O $(Pipeline.Workspace)/param_value.txt
      ls $(Pipeline.Workspace)
+     pwd
+     echo "whare I am in"
     displayName: 'Assign k8s values'
-     
+
   - script: |
       KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
       echo "$KubernetesSiteUpdate"
@@ -40,7 +43,6 @@ jobs:
       echo "##vso[task.setvariable variable=Branch]$BranchName"
     displayName: 'Assign k8s values'
 
-  - script: cat $(Pipeline.Workspace)/param_value.txt
   - task: Bash@3
     inputs:
       targetType: 'inline'
@@ -65,6 +67,10 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        pwd
+        echo "whare I am in"
+        ls
+        echo "**************"
         mkdir BoldBIEnterpriseEdition-Linux/application/bi/datascheduler
         cp -R BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
         mkdir BoldBIEnterpriseEdition-Linux/application/bi/viewer
@@ -74,6 +80,10 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        pwd
+        echo "whare I am in"
+        ls
+        echo "**************"
         # Define variables
         APP_SETTINGS_FILE="BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
         NEW_APP_PATH="bi/data-scheduler"
@@ -82,11 +92,18 @@ jobs:
         # Update app-settings.json
         sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
         sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
+
+        echo "***************************************"
+        cat $APP_SETTINGS_FILE
         
   - task: Bash@3
     inputs:
       targetType: 'inline'
       script: |
+        pwd
+        echo "whare I am in"
+        ls
+        echo "**************"
         # Define variables
         APP_SETTINGS_FILE="BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
         NEW_APP_PATH="bi/viewer"
@@ -95,6 +112,9 @@ jobs:
         # Update app-settings.json
         sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
         sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
+
+        echo "***************************************"
+        cat $APP_SETTINGS_FILE
 
   - task: Docker@2
     inputs:
