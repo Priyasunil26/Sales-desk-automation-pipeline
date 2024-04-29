@@ -71,11 +71,16 @@ jobs:
         echo "whare I am in"
         ls
         echo "**************"
-        mkdir BoldBIEnterpriseEdition-Linux/application/bi/datascheduler
-        cp -R BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
-        mkdir BoldBIEnterpriseEdition-Linux/application/bi/viewer
-        cp -R BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-          
+        ls BoldBIEnterpriseEdition-Linux
+        echo "**************"
+
+        mkdir -p BoldBIEnterpriseEdition-Linux/application/bi/datascheduler
+        cp -r BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
+        mkdir -p BoldBIEnterpriseEdition-Linux/application/bi/viewer
+        cp -r BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        echo "**************"
+        ls BoldBIEnterpriseEdition-Linux
+        echo "**************"
   - task: Bash@3
     inputs:
       targetType: 'inline'
