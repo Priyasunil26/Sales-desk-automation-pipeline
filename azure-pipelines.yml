@@ -67,32 +67,20 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        pwd
-        echo "whare I am in"
-        ls
-        echo "**************"
-        ls BoldBIEnterpriseEdition-Linux
-        echo "**************"
-        echo $(Pipeline.Workspace)
-        echo "**************"
-        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
-        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer\
-        ls BoldBIEnterpriseEdition-Linux/application/bi/dataservice/*
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-        echo "**************"
-        ls BoldBIEnterpriseEdition-Linux
-        echo "**************"
+        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
+        
+        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        
+        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
   - task: Bash@3
     inputs:
       targetType: 'inline'
       script: |
-        pwd
-        echo "whare I am in"
-        ls
-        echo "**************"
-        # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
+
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
         NEW_APP_PATH="bi/data-scheduler"
         NEW_LOGGER_NAME="bi.data-scheduler"
     
@@ -112,7 +100,7 @@ jobs:
         ls
         echo "**************"
         # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
         NEW_APP_PATH="bi/viewer"
         NEW_LOGGER_NAME="bi.viewer"
     
