@@ -68,16 +68,14 @@ jobs:
       targetType: 'inline'
       script: |
         pwd
-        echo "whare I am in"
+        echo "where I am in"
         ls
         echo "**************"
-        ls BoldBIEnterpriseEdition-Linux
-        echo "**************"
-
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
+        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-service/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
+        pwd
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-service/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
         echo "**************"
         ls BoldBIEnterpriseEdition-Linux
         echo "**************"
@@ -86,21 +84,20 @@ jobs:
       targetType: 'inline'
       script: |
         pwd
-        echo "whare I am in"
+        echo "where I am in"
         ls
         echo "**************"
         # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/app-settings.json"
         NEW_APP_PATH="bi/data-scheduler"
         NEW_LOGGER_NAME="bi.data-scheduler"
     
         # Update app-settings.json
         sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
         sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
-
         echo "***************************************"
         cat $APP_SETTINGS_FILE
-        
+
   - task: Bash@3
     inputs:
       targetType: 'inline'
