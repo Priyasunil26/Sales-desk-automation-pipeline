@@ -73,11 +73,11 @@ jobs:
         echo "**************"
         ls BoldBIEnterpriseEdition-Linux
         echo "**************"
-
+        echo $(Pipeline.Workspace)
+        echo "**************"
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
         cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer\
-        pwd
         ls $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/*
         cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
         echo "**************"
