@@ -60,8 +60,41 @@ jobs:
             echo "Bold BI Kubernetes Linux Package Does Not Exist"
           fi
     continueOnError: true
-
-
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p application/bi/datascheduler
+          cp -R application/bi/data-service/* application/bi/datascheduler/
+          mkdir -p application/bi/viewer
+          cp -R application/bi/data-service/* application/bi/viewer/
+          
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Define variables
+          APP_SETTINGS_FILE="application/bi/datascheduler/app-settings.json"
+          NEW_APP_PATH="bi/data-scheduler"
+          NEW_LOGGER_NAME="bi.data-scheduler"
+     
+          # Update app-settings.json
+          sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
+          sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
+          
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Define variables
+          APP_SETTINGS_FILE="application/bi/viewer/app-settings.json"
+          NEW_APP_PATH="bi/viewer"
+          NEW_LOGGER_NAME="bi.viewer"
+     
+          # Update app-settings.json
+          sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
+          sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
 
   - task: Docker@2
     inputs:
@@ -138,6 +171,44 @@ jobs:
     displayName: Docker push BI-Designer Image
     continueOnError: true
 
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/dataschedular'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-Web Image
+    continueOnError: true
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/dataschedular'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-Web Image
+    continueOnError: true
+    
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/dataschedular'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker  push BI-Web Image
+    continueOnError: true
+    
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/dataschedular'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker  push BI-Web Image
+    continueOnError: true
+    
   - task: Docker@2
     inputs:
       containerRegistry: 'Artifect_Registry'
@@ -230,7 +301,7 @@ jobs:
           sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
     displayName: Update version configmap
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
     
   - task: Kubernetes@1
@@ -245,7 +316,7 @@ jobs:
       outputFormat: 'none'
     displayName: Apply version configmap
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
       
   - task: Kubernetes@1
     inputs:
@@ -257,7 +328,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Id-Web Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
     
   - task: Kubernetes@1
     inputs:
@@ -269,7 +340,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Id-Api Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
     
   - task: Kubernetes@1
     inputs:
@@ -281,7 +352,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Id-ums Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
   - task: Kubernetes@1
     inputs:
@@ -293,7 +364,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Bi-Web Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
   - task: Kubernetes@1
     inputs:
@@ -305,7 +376,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Bi-Api Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
   - task: Kubernetes@1
     inputs:
@@ -317,7 +388,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Bi-Jobs Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
   - task: Kubernetes@1
     inputs:
@@ -329,7 +400,7 @@ jobs:
       outputFormat: 'none'
     displayName: Update Bi-Designer Image tag
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
       
   - task: Kubernetes@1
     inputs:
@@ -343,7 +414,7 @@ jobs:
       outputFormat: 'none'
     displayName: Showing list of pods
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
   - task: Kubernetes@1
     inputs:
@@ -357,7 +428,7 @@ jobs:
       outputFormat: 'none'
     displayName: Showing list of deployment
     continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'development'))
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
   - task: Bash@3
     inputs:
