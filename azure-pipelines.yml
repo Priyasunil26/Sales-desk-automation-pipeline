@@ -65,17 +65,17 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        mkdir -p application/bi/datascheduler
-        cp -R application/bi/data-service/* application/bi/datascheduler/
-        mkdir -p application/bi/viewer
-        cp -R application/bi/data-service/* application/bi/viewer/
+        mkdir BoldBIEnterpriseEdition-Linux/application/bi/datascheduler
+        cp -R BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
+        mkdir BoldBIEnterpriseEdition-Linux/application/bi/viewer
+        cp -R BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* BoldBIEnterpriseEdition-Linux/application/bi/viewer/
           
   - task: Bash@3
     inputs:
       targetType: 'inline'
       script: |
         # Define variables
-        APP_SETTINGS_FILE="application/bi/datascheduler/app-settings.json"
+        APP_SETTINGS_FILE="BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
         NEW_APP_PATH="bi/data-scheduler"
         NEW_LOGGER_NAME="bi.data-scheduler"
     
@@ -88,7 +88,7 @@ jobs:
       targetType: 'inline'
       script: |
         # Define variables
-        APP_SETTINGS_FILE="application/bi/viewer/app-settings.json"
+        APP_SETTINGS_FILE="BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
         NEW_APP_PATH="bi/viewer"
         NEW_LOGGER_NAME="bi.viewer"
     
