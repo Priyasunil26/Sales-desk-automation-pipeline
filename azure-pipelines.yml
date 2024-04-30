@@ -41,27 +41,22 @@ jobs:
       BranchName=$(awk '/Branch:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
       echo "$BranchName"
       echo "##vso[task.setvariable variable=Branch]$BranchName"
-    displayName: 'Assign k8s values'
-
-  - task: Bash@3
+    displayName: 'Read Param Value'
+  - task: CopyFiles@2
     inputs:
-      targetType: 'inline'
-      script: |
-        # Move the content of data-scheduler.txt to dataschedular.dockerfile
-        sudo mv data-scheduler.txt data-schedular.dockerfile
-      workingDirectory: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
-    displayName: 'Move content to dataschedular file'
-    continueOnError: true
-    
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        # Move the content of designer-viewer.txt to dataschedular.dockerfile
-        sudo mv data-scheduler.txt designer-viewer.dockerfile
-      workingDirectory: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
+      SourceFolder: '$(Pipeline.Workspace)'
+      Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
+      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
     displayName: 'Move content to designer-viewer file'
     continueOnError: true
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)'
+      Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
+      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
+    displayName: 'Move content to designer-viewer file'
+    #continueOnError: true
 
   - script: |
       KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
