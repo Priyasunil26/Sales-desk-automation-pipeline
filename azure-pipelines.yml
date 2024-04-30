@@ -98,7 +98,7 @@ jobs:
         sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
         ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
         echo **********
-        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer
+        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
     displayName: 'Creating a folder and moving files'
     continueOnError: true
 
