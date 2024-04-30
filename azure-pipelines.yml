@@ -79,7 +79,7 @@ jobs:
       script: |
         ls
         sudo cp -r data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-        sudo cp -r data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+        sudo cp -r designer-viewer.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
         sudo ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
     displayName: 'Copy docker files'    
     continueOnError: true
@@ -130,7 +130,7 @@ jobs:
       containerRegistry: 'Artifect_Registry'
       repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
       command: 'build'
-      Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
+      Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
       tags: '$(TAG)_dev'
     displayName: Docker Build Id-datascheduler Image
     continueOnError: true
