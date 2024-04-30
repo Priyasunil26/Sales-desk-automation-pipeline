@@ -87,7 +87,9 @@ jobs:
       Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
       TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
     displayName: 'Move content to designer-viewer file'
-    continueOnError: true    
+    continueOnError: true  
+
+  - script: ls BoldBIEnterpriseEdition-Linux  
   - task: Bash@3
     inputs:
       targetType: 'inline'
