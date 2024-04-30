@@ -42,21 +42,6 @@ jobs:
       echo "$BranchName"
       echo "##vso[task.setvariable variable=Branch]$BranchName"
     displayName: 'Read Param Value'
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)'
-      Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
-    displayName: 'Move content to designer-viewer file'
-    continueOnError: true
-
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)'
-      Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
-    displayName: 'Move content to designer-viewer file'
-    continueOnError: true
 
   - script: |
       KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
@@ -88,7 +73,21 @@ jobs:
           fi
     continueOnError: true
     
-    
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)'
+      Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
+      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
+    displayName: 'Move content to designer-viewer file'
+    continueOnError: true
+
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)'
+      Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
+      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
+    displayName: 'Move content to designer-viewer file'
+    continueOnError: true    
   - task: Bash@3
     inputs:
       targetType: 'inline'
@@ -101,11 +100,12 @@ jobs:
         echo "**************"
 
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
-        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
+        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer
+        find $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice -maxdepth 1 -type f -exec cp {} $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer/ \;
         echo "**************"
         ls BoldBIEnterpriseEdition-Linux
+        ls BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer
         echo "**************"
     displayName: 'Folder Creation'
     continueOnError: true
@@ -119,7 +119,7 @@ jobs:
         ls
         echo "**************"
         # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/app-settings.json"
         NEW_APP_PATH="\/bi\/data-schedular"
         NEW_LOGGER_NAME="bi.data-schedular"
     
@@ -140,9 +140,9 @@ jobs:
         ls
         echo "**************"
         # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
-        NEW_APP_PATH="/bi/dataschedular"
-        NEW_LOGGER_NAME="bi.schedular"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer/app-settings.json"
+        NEW_APP_PATH="/bi/viewer"
+        NEW_LOGGER_NAME="bi.viewer"
 
         # Read the file content
         content=$(cat "$APP_SETTINGS_FILE")
