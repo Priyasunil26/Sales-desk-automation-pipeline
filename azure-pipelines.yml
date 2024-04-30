@@ -141,17 +141,28 @@ jobs:
         echo "**************"
         # Define variables
         APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/app-settings.json"
-        NEW_APP_PATH="\/bi\/viewer"
-        NEW_LOGGER_NAME="bi.viewer"
-    
-        # Update app-settings.json
-        sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-        sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+        NEW_APP_PATH="/bi/dataschedular"
+        NEW_LOGGER_NAME="bi.schedular"
 
-        echo "***************************************"
-        cat $APP_SETTINGS_FILE
+        # Read the file content
+        content=$(cat "$APP_SETTINGS_FILE")
+
+        # Update app-settings.json
+        updated_content=$(echo "$content" | grep -v '"AppPath":' | grep -v '"Loggername":' | sed '$s/.$//' | sed '$s/,$//')
+        updated_content="$updated_content,"$'\n'"    \"AppPath\": \"$NEW_APP_PATH\","
+        updated_content="$updated_content,"$'\n'"    \"Loggername\": \"$NEW_LOGGER_NAME\""
+        
+        # Save the updated content
+        echo "$updated_content" > "$APP_SETTINGS_FILE.tmp"
+        
+        # Replace the original file with the updated one
+        mv "$APP_SETTINGS_FILE.tmp" "$APP_SETTINGS_FILE"
+
+        # Display the updated file
+        cat "$APP_SETTINGS_FILE"
     displayName: 'App setting file Editing'    
     #continueOnError: true
+
 
   - task: Docker@2
     inputs:
@@ -222,7 +233,7 @@ jobs:
   - task: Docker@2
     inputs:
       containerRegistry: 'Artifect_Registry'
-      repository: 'Sales-desk-automation-pipeline/boldbi-designer'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
       command: 'push'
       tags: '$(TAG)_dev'
     displayName: Docker push BI-Designer Image
@@ -231,7 +242,7 @@ jobs:
   - task: Docker@2
     inputs:
       containerRegistry: 'Artifect_Registry'
-      repository: 'Sales-desk-automation-pipeline/data-schedular'
+      repository: 'boldbi-dev-296107/boldbi/data-schedular'
       command: 'build'
       Dockerfile: BoldBIEnterpriseEdition-Linux/data-schedular.Dockerfile
       tags: '$(TAG)_dev'
@@ -241,7 +252,7 @@ jobs:
   - task: Docker@2
     inputs:
       containerRegistry: 'Artifect_Registry'
-      repository: 'Sales-desk-automation-pipeline/data-schedular'
+      repository: 'boldbi-dev-296107/boldbi/data-schedular'
       command: 'push'
       tags: '$(TAG)_dev'
     displayName: Docker push BI-Data-Schedular Image
@@ -250,7 +261,7 @@ jobs:
   - task: Docker@2
     inputs:
       containerRegistry: 'Artifect_Registry'
-      repository: 'Sales-desk-automation-pipeline/designer-viewer'
+      repository: 'boldbi-dev-296107/boldbi/designer-viewer'
       command: 'build'
       Dockerfile: BoldBIEnterpriseEdition-Linux/designer-viewer.Dockerfile
       tags: '$(TAG)_dev'
