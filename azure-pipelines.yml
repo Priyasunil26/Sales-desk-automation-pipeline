@@ -93,7 +93,7 @@ jobs:
       targetType: 'inline'
       script: |
         sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
+        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
         sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer
         sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
     displayName: 'Creating a folder and moving files'
@@ -107,8 +107,8 @@ jobs:
         NEW_APP_PATH="\/bi\/data-scheduler"
         NEW_LOGGER_NAME="bi.data-scheduler"
 
-        sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-        sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+        sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
+        sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
     displayName: 'Updating properties in data-scheduler appsettings'    
     continueOnError: true
 
@@ -120,8 +120,8 @@ jobs:
         NEW_APP_PATH="\/bi/viewer"
         NEW_LOGGER_NAME="bi.viewer"
 
-        sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-        sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+        sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
+        sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
     displayName: 'Updating properties in data-scheduler appsettings'    
     continueOnError: true
 
