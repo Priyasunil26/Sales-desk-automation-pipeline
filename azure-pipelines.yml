@@ -100,7 +100,7 @@ jobs:
         echo "**************"
 
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/datascheduler/
+        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
         sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer
         find $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/dataservice -maxdepth 1 -type f -exec cp {} $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/designer-viewer/ \;
         echo "**************"
