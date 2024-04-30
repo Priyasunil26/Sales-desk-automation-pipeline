@@ -47,6 +47,36 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        # Move the content of data-scheduler.txt to dataschedular.dockerfile
+        mv data-scheduler.txt dataschedular.dockerfile
+      workingDirectory: 'BoldBIEnterpriseEdition-Linux'
+    displayName: 'Move content to dataschedular file'
+    continueOnError: true
+    
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Move the content of designer-viewer.txt to dataschedular.dockerfile
+        mv data-scheduler.txt designer-viewer.dockerfile
+      workingDirectory: 'BoldBIEnterpriseEdition-Linux'
+    displayName: 'Move content to designer-viewer file'
+    continueOnError: true
+
+  - script: |
+      KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+      echo "$KubernetesSiteUpdate"
+      echo "##vso[task.setvariable variable=Updatek8ssite]$KubernetesSiteUpdate"
+      BranchName=$(awk '/Branch:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+      echo "$BranchName"
+      echo "##vso[task.setvariable variable=Branch]$BranchName"
+    displayName: 'Assign k8s values'
+
+  - script: cat $(Pipeline.Workspace)/param_value.txt
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
           if [ -f $(Pipeline.Workspace)/param_value.txt ]; then
             URL=$(awk '/KubernetesPackage:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
             echo "Text File URL: $URL"
@@ -62,6 +92,7 @@ jobs:
             echo "Bold BI Kubernetes Linux Package Does Not Exist"
           fi
     continueOnError: true
+    
     
   - task: Bash@3
     inputs:
@@ -81,6 +112,7 @@ jobs:
         echo "**************"
         ls BoldBIEnterpriseEdition-Linux
         echo "**************"
+    displayName: 'Folder Creation'
     continueOnError: true
 
   - task: Bash@3
@@ -103,7 +135,9 @@ jobs:
 
         echo "***************************************"
         cat $APP_SETTINGS_FILE
+    displayName: 'App setting file Editing'    
     continueOnError: true
+
 
   - task: Docker@2
     inputs:
