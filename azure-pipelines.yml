@@ -77,7 +77,7 @@ jobs:
     inputs:
       SourceFolder: '$(Pipeline.Workspace)'
       Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
+      TargetFolder: '$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux'
     displayName: 'Move content to data-scheduler file'
     continueOnError: true
 
@@ -135,7 +135,7 @@ jobs:
       containerRegistry: 'Artifect_Registry'
       repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
       command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
+      Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
       tags: '$(TAG)_dev'
     displayName: Docker Build Id-datascheduler Image
     continueOnError: true
@@ -154,7 +154,7 @@ jobs:
       containerRegistry: 'Artifect_Registry'
       repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
       command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/designer-viewer.dockerfile
+      Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/designer-viewer.dockerfile
       tags: '$(TAG)_dev'
     displayName: Docker Build Id-designer-viewer Image
     continueOnError: true
