@@ -141,6 +141,24 @@ jobs:
   - task: Docker@2
     inputs:
       containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push Id-Web Image
+    continueOnError: true
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build Id-Web Image
+    continueOnError: true
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
       repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
       command: 'push'
       tags: '$(TAG)_dev'
