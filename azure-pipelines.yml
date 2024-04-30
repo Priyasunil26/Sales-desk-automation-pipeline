@@ -125,7 +125,7 @@ jobs:
 
         sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
         sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
-    displayName: 'Updating properties in data-scheduler appsettings'    
+    displayName: 'Updating properties in viewer appsettings'    
     continueOnError: true
 
   - task: Bash@3
