@@ -120,7 +120,7 @@ jobs:
       targetType: 'inline'
       script: |
         APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
-        NEW_APP_PATH="\/bi/viewer"
+        NEW_APP_PATH="\/bi\/viewer"
         NEW_LOGGER_NAME="bi.viewer"
 
         sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
