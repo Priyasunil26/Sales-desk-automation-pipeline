@@ -103,7 +103,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        APP_SETTINGS_FILE="appsettings.json"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
         NEW_APP_PATH="\/bi\/data-scheduler"
         NEW_LOGGER_NAME="bi.data-scheduler"
 
@@ -116,12 +116,32 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        APP_SETTINGS_FILE="appsettings.json"
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
         NEW_APP_PATH="\/bi/viewer"
         NEW_LOGGER_NAME="bi.viewer"
 
         sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
         sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+    displayName: 'Updating properties in data-scheduler appsettings'    
+    continueOnError: true
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
+
+        cat $APP_SETTINGS_FILE
+    displayName: 'Updating properties in data-scheduler appsettings'    
+    continueOnError: true
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
+
+        cat $APP_SETTINGS_FILE
     displayName: 'Updating properties in data-scheduler appsettings'    
     continueOnError: true
 
