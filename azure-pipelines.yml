@@ -48,8 +48,8 @@ jobs:
       targetType: 'inline'
       script: |
         # Move the content of data-scheduler.txt to dataschedular.dockerfile
-        mv data-scheduler.txt dataschedular.dockerfile
-      workingDirectory: 'BoldBIEnterpriseEdition-Linux'
+        sudo mv data-scheduler.txt data-schedular.dockerfile
+      workingDirectory: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
     displayName: 'Move content to dataschedular file'
     continueOnError: true
     
@@ -58,8 +58,8 @@ jobs:
       targetType: 'inline'
       script: |
         # Move the content of designer-viewer.txt to dataschedular.dockerfile
-        mv data-scheduler.txt designer-viewer.dockerfile
-      workingDirectory: 'BoldBIEnterpriseEdition-Linux'
+        sudo mv data-scheduler.txt designer-viewer.dockerfile
+      workingDirectory: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
     displayName: 'Move content to designer-viewer file'
     continueOnError: true
 
