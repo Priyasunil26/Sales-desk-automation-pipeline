@@ -73,61 +73,63 @@ jobs:
           fi
     continueOnError: true
     
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)'
-      Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux'
+  - bash: |
+      # Find the path of the data-scheduler.dockerfile
+      file=$(find $(Pipeline.Workspace) -name "data-scheduler.dockerfile")
+      
+      # Move the file to the target folder
+      mv $file $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/
     displayName: 'Move content to data-scheduler file'
     continueOnError: true
 
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)'
-      Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
-    displayName: 'Move content to designer-viewer file'
-    continueOnError: true    
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
-        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        echo **********
-        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-    displayName: 'Creating a folder and moving files'
-    continueOnError: true
+  # - task: CopyFiles@2
+  #   inputs:
+  #     SourceFolder: '$(Pipeline.Workspace)'
+  #     Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
+  #     TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
+  #   displayName: 'Move content to designer-viewer file'
+  #   continueOnError: true    
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
-        NEW_APP_PATH="\/bi\/data-scheduler"
-        NEW_LOGGER_NAME="bi.data-scheduler"
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+  #       sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
+  #       sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+  #       sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+  #       ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+  #       echo **********
+  #       ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+  #   displayName: 'Creating a folder and moving files'
+  #   continueOnError: true
 
-        sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-        sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
-    displayName: 'Updating properties in data-scheduler appsettings'    
-    continueOnError: true
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
+  #       NEW_APP_PATH="\/bi\/data-scheduler"
+  #       NEW_LOGGER_NAME="bi.data-scheduler"
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
-        NEW_APP_PATH="\/bi\/viewer"
-        NEW_LOGGER_NAME="bi.viewer"
+  #       sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
+  #       sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+  #   displayName: 'Updating properties in data-scheduler appsettings'    
+  #   continueOnError: true
 
-        sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-        sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
-    displayName: 'Updating properties in viewer appsettings'    
-    continueOnError: true
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
+  #       NEW_APP_PATH="\/bi\/viewer"
+  #       NEW_LOGGER_NAME="bi.viewer"
+
+  #       sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
+  #       sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+  #   displayName: 'Updating properties in viewer appsettings'    
+  #   continueOnError: true
 
   - script: ls BoldBIEnterpriseEdition-Linux
 
