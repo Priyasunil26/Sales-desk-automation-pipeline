@@ -128,23 +128,21 @@ jobs:
     displayName: 'Updating properties in viewer appsettings'    
     continueOnError: true
 
-  - task: Bash@3
+  - task: Docker@2
     inputs:
-      targetType: 'inline'
-      script: |
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
-
-        cat $APP_SETTINGS_FILE
-    displayName: 'view data'    
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build Id-Web Image
     continueOnError: true
-
-  - task: Bash@3
+            
+  - task: Docker@2
     inputs:
-      targetType: 'inline'
-      script: |
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
-
-        cat $APP_SETTINGS_FILE
-    displayName: 'view viewer'    
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push Id-Web Image
     continueOnError: true
-
