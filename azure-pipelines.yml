@@ -205,44 +205,6 @@ jobs:
       tags: '$(TAG)_dev'
     displayName: Docker push BI-Designer Image
     continueOnError: true
-
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Web Image
-    continueOnError: true
-
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Web Image
-    continueOnError: true
-    
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker  push BI-Web Image
-    continueOnError: true
-    
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker  push BI-Web Image
-    continueOnError: true
     
   - task: Docker@2
     inputs:
