@@ -166,3 +166,60 @@ jobs:
       tags: '$(TAG)_dev'
     displayName: Docker push Id-designer-viewer Image
     continueOnError: true
+
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
+        
+          sed -i "s/namespace:.*/namespace: boldbi/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_dev/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_dev/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_dev/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_dev/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+    displayName: Update version configmap
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+      namespace: 'boldbi'
+      command: 'set'
+      arguments: 'image deployment/bi-dataservice-datascheduler-deployment bi-dataservice-datascheduler-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bi-dataservice-datascheduler:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Bi-Jobs Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+      namespace: 'boldbi'
+      command: 'set'
+      arguments: 'image deployment/bi-dataservice-viewer-deployment bi-dataservice-viewer-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bi-dataservice-viewer:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Bi-Designer Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+      namespace: 'saledesk-pipline'
+      command: 'get'
+      arguments: 'deployment -o wide'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
+      outputFormat: 'none'
+    displayName: Showing list of deployment
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
