@@ -72,22 +72,17 @@ jobs:
             echo "Bold BI Kubernetes Linux Package Does Not Exist"
           fi
     continueOnError: true
-    
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)'
-      Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux'
-    displayName: 'Move content to data-scheduler file'
-    continueOnError: true
 
-  - task: CopyFiles@2
+  - task: Bash@3
     inputs:
-      SourceFolder: '$(Pipeline.Workspace)'
-      Contents: '**/designer-viewer.dockerfile'  # Path to the file you want to move
-      TargetFolder: '$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux' 
-    displayName: 'Move content to designer-viewer file'
-    continueOnError: true  
+      targetType: 'inline'
+      script: |
+        ls
+        cp data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+        cp data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+        la $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+    displayName: 'Copy docker files'    
+    continueOnError: true
 
   - script: ls BoldBIEnterpriseEdition-Linux  
   - task: Bash@3
