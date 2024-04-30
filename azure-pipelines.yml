@@ -80,7 +80,7 @@ jobs:
         ls
         sudo cp data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
         sudo cp data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-        la $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+        sudo ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
     displayName: 'Copy docker files'    
     continueOnError: true
 
