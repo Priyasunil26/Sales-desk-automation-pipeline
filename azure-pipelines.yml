@@ -63,536 +63,546 @@ jobs:
           fi
     continueOnError: true
     
-  - task: Bash@3
+  - task: CopyFiles@2
     inputs:
-      targetType: 'inline'
-      script: |
-        pwd
-        echo "where I am in"
-        ls
-        echo "**************"
-        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-service/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
-        pwd
-        sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-        cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-service/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-        echo "**************"
-        ls BoldBIEnterpriseEdition-Linux
-        echo "**************"
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        pwd
-        echo "where I am in"
-        ls
-        echo "**************"
-        # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/app-settings.json"
-        NEW_APP_PATH="bi/data-scheduler"
-        NEW_LOGGER_NAME="bi.data-scheduler"
-    
-        # Update app-settings.json
-        sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
-        sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
-        echo "***************************************"
-        cat $APP_SETTINGS_FILE
-
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        pwd
-        echo "whare I am in"
-        ls
-        echo "**************"
-        # Define variables
-        APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
-        NEW_APP_PATH="bi/viewer"
-        NEW_LOGGER_NAME="bi.viewer"
-    
-        # Update app-settings.json
-        sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
-        sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
-
-        echo "***************************************"
-        cat $APP_SETTINGS_FILE
-
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-identity'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/identity.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build Id-Web Image
-    continueOnError: true
-            
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-identity'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker push Id-Web Image
-    continueOnError: true
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-identity-api'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/identity-api.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build Id-Api Image
-    continueOnError: true
-            
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-identity-api'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker push Id-Api Image
+      SourceFolder: '$(Pipeline.Workspace)'
+      Contents: '**/data-scheduler.dockerfile'  # Path to the file you want to move
+      TargetFolder: '$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux'
+    displayName: 'Move content to designer-viewer file'
     continueOnError: true
 
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-ums'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/ums.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build Id-Ums Image
-    continueOnError: true
-            
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-ums'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker Id-Ums push Image
-    continueOnError: true
-    
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/designer.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Designer Image
-    continueOnError: true
-            
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker push BI-Designer Image
-    continueOnError: true
+  - script: ls BoldBIEnterpriseEdition-Linux
 
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Web Image
-    continueOnError: true
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       pwd
+  #       echo "where I am in"
+  #       ls
+  #       echo "**************"
+  #       sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+  #       cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-service/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
+  #       pwd
+  #       sudo mkdir -p $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+  #       cp -r $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-service/* $(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+  #       echo "**************"
+  #       ls BoldBIEnterpriseEdition-Linux
+  #       echo "**************"
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       pwd
+  #       echo "where I am in"
+  #       ls
+  #       echo "**************"
+  #       # Define variables
+  #       APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/app-settings.json"
+  #       NEW_APP_PATH="bi/data-scheduler"
+  #       NEW_LOGGER_NAME="bi.data-scheduler"
+    
+  #       # Update app-settings.json
+  #       sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
+  #       sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
+  #       echo "***************************************"
+  #       cat $APP_SETTINGS_FILE
 
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Web Image
-    continueOnError: true
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       pwd
+  #       echo "whare I am in"
+  #       ls
+  #       echo "**************"
+  #       # Define variables
+  #       APP_SETTINGS_FILE="$(Pipeline.Workspace)/BoldBIEnterpriseEdition-Linux/application/bi/viewer/app-settings.json"
+  #       NEW_APP_PATH="bi/viewer"
+  #       NEW_LOGGER_NAME="bi.viewer"
     
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker  push BI-Web Image
-    continueOnError: true
-    
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/dataschedular'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker  push BI-Web Image
-    continueOnError: true
-    
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-etl'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/etl.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Etl Image
-    continueOnError: true
+  #       # Update app-settings.json
+  #       sed -i "s/\"AppPath\":.*/\"AppPath\": \"$NEW_APP_PATH\",/" "$APP_SETTINGS_FILE"
+  #       sed -i "s/\"Loggername\":.*/\"Loggername\": \"$NEW_LOGGER_NAME\",/" "$APP_SETTINGS_FILE"
+
+  #       echo "***************************************"
+  #       cat $APP_SETTINGS_FILE
+
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-identity'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/identity.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build Id-Web Image
+  #   continueOnError: true
             
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/bold-etl'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker push BI-Etl Image
-    continueOnError: true
-    
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-server-api'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/server-api.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-API Image
-    continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-identity'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker push Id-Web Image
+  #   continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-identity-api'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/identity-api.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build Id-Api Image
+  #   continueOnError: true
             
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-server-api'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker push BI-Api Image
-    continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-identity-api'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker push Id-Api Image
+  #   continueOnError: true
+
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-ums'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/ums.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build Id-Ums Image
+  #   continueOnError: true
+            
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-ums'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Id-Ums push Image
+  #   continueOnError: true
+    
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/designer.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-Designer Image
+  #   continueOnError: true
+            
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker push BI-Designer Image
+  #   continueOnError: true
+
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/dataschedular'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-Web Image
+  #   continueOnError: true
+
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/dataschedular'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/dataschedular.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-Web Image
+  #   continueOnError: true
+    
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/dataschedular'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker  push BI-Web Image
+  #   continueOnError: true
+    
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/dataschedular'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker  push BI-Web Image
+  #   continueOnError: true
+    
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-etl'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/etl.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-Etl Image
+  #   continueOnError: true
+            
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/bold-etl'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker push BI-Etl Image
+  #   continueOnError: true
+    
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-server-api'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/server-api.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-API Image
+  #   continueOnError: true
+            
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-server-api'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker push BI-Api Image
+  #   continueOnError: true
  
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-server-jobs'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/server-jobs.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Jobs Image
-    continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-server-jobs'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/server-jobs.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-Jobs Image
+  #   continueOnError: true
             
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-server-jobs'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker push BI-Jobs Image
-    continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-server-jobs'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker push BI-Jobs Image
+  #   continueOnError: true
     
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-server'
-      command: 'build'
-      Dockerfile: BoldBIEnterpriseEdition-Linux/server.Dockerfile
-      tags: '$(TAG)_dev'
-    displayName: Docker Build BI-Web Image
-    continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-server'
+  #     command: 'build'
+  #     Dockerfile: BoldBIEnterpriseEdition-Linux/server.Dockerfile
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker Build BI-Web Image
+  #   continueOnError: true
             
-  - task: Docker@2
-    inputs:
-      containerRegistry: 'Artifect_Registry'
-      repository: 'boldbi-dev-296107/boldbi/boldbi-server'
-      command: 'push'
-      tags: '$(TAG)_dev'
-    displayName: Docker  push BI-Web Image
-    continueOnError: true
+  # - task: Docker@2
+  #   inputs:
+  #     containerRegistry: 'Artifect_Registry'
+  #     repository: 'boldbi-dev-296107/boldbi/boldbi-server'
+  #     command: 'push'
+  #     tags: '$(TAG)_dev'
+  #   displayName: Docker  push BI-Web Image
+  #   continueOnError: true
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
         
-          sed -i "s/namespace:.*/namespace: boldbi/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_dev/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_dev/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_dev/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_dev/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
-          sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
-    displayName: Update version configmap
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  #         sed -i "s/namespace:.*/namespace: boldbi/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_dev/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_dev/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_dev/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_dev/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+  #         sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+  #   displayName: Update version configmap
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
     
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'apply'
-      arguments: '-f version-config.yaml'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Azure Container Registry'
-      outputFormat: 'none'
-    displayName: Apply version configmap
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'apply'
+  #     arguments: '-f version-config.yaml'
+  #     secretType: 'dockerRegistry'
+  #     containerRegistryType: 'Azure Container Registry'
+  #     outputFormat: 'none'
+  #   displayName: Apply version configmap
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
       
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/id-web-deployment id-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Id-Web Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/id-web-deployment id-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Id-Web Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
     
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/id-api-deployment id-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity-api:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Id-Api Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/id-api-deployment id-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity-api:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Id-Api Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
     
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/id-ums-deployment id-ums-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-ums:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Id-ums Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/id-ums-deployment id-ums-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-ums:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Id-ums Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/bi-web-deployment bi-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Web Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-web-deployment bi-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Web Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/bi-api-deployment bi-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-api:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Api Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-api-deployment bi-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-api:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Api Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/bi-jobs-deployment bi-jobs-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-jobs:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Jobs Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-jobs-deployment bi-jobs-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-jobs:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Jobs Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'set'
-      arguments: 'image deployment/bi-dataservice-deployment bi-dataservice-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-designer:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Designer Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-dataservice-deployment bi-dataservice-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-designer:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Designer Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
       
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'get'
-      arguments: 'pods'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Azure Container Registry'
-      outputFormat: 'none'
-    displayName: Showing list of pods
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'get'
+  #     arguments: 'pods'
+  #     secretType: 'dockerRegistry'
+  #     containerRegistryType: 'Azure Container Registry'
+  #     outputFormat: 'none'
+  #   displayName: Showing list of pods
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'boldbi'
-      command: 'get'
-      arguments: 'deployment -o wide'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Azure Container Registry'
-      outputFormat: 'none'
-    displayName: Showing list of deployment
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'boldbi'
+  #     command: 'get'
+  #     arguments: 'deployment -o wide'
+  #     secretType: 'dockerRegistry'
+  #     containerRegistryType: 'Azure Container Registry'
+  #     outputFormat: 'none'
+  #   displayName: Showing list of deployment
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'BoldBI_salesdesk_v7.5'))
 
-  - task: Bash@3
-    inputs:
-        targetType: 'inline'
-        script: |
-          wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
+  # - task: Bash@3
+  #   inputs:
+  #       targetType: 'inline'
+  #       script: |
+  #         wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
           
-            sed -i "s/namespace:.*/namespace: bold-services/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_dev/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_dev/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_dev/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_dev/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
-            sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
-    displayName: Update version configmap
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  #           sed -i "s/namespace:.*/namespace: bold-services/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_dev/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_dev/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_dev/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_dev/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+  #           sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_dev/g" version-config.yaml
+  #   displayName: Update version configmap
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
 
     
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'apply'
-      arguments: '-f version-config.yaml'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Azure Container Registry'
-      outputFormat: 'none'
-    displayName: Apply version configmap
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'apply'
+  #     arguments: '-f version-config.yaml'
+  #     secretType: 'dockerRegistry'
+  #     containerRegistryType: 'Azure Container Registry'
+  #     outputFormat: 'none'
+  #   displayName: Apply version configmap
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
       
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/id-web-deployment id-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Id-Web Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/id-web-deployment id-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Id-Web Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
     
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/id-api-deployment id-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity-api:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Id-Api Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/id-api-deployment id-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity-api:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Id-Api Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
     
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/id-ums-deployment id-ums-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-ums:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Id-ums Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/id-ums-deployment id-ums-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-ums:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Id-ums Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/bi-web-deployment bi-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Web Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-web-deployment bi-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Web Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/bi-api-deployment bi-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-api:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Api Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-api-deployment bi-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-api:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Api Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/bi-jobs-deployment bi-jobs-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-jobs:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Jobs Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-jobs-deployment bi-jobs-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-jobs:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Jobs Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'set'
-      arguments: 'image deployment/bi-dataservice-deployment bi-dataservice-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-designer:$(TAG)_dev'
-      outputFormat: 'none'
-    displayName: Update Bi-Designer Image tag
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'set'
+  #     arguments: 'image deployment/bi-dataservice-deployment bi-dataservice-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-designer:$(TAG)_dev'
+  #     outputFormat: 'none'
+  #   displayName: Update Bi-Designer Image tag
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
       
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'get'
-      arguments: 'pods'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Azure Container Registry'
-      outputFormat: 'none'
-    displayName: Showing list of pods
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'get'
+  #     arguments: 'pods'
+  #     secretType: 'dockerRegistry'
+  #     containerRegistryType: 'Azure Container Registry'
+  #     outputFormat: 'none'
+  #   displayName: Showing list of pods
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
 
-  - task: Kubernetes@1
-    inputs:
-      connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'bold-services'
-      command: 'get'
-      arguments: 'deployment -o wide'
-      secretType: 'dockerRegistry'
-      containerRegistryType: 'Azure Container Registry'
-      outputFormat: 'none'
-    displayName: Showing list of deployment
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
+  # - task: Kubernetes@1
+  #   inputs:
+  #     connectionType: 'Kubernetes Service Connection'
+  #     kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+  #     namespace: 'bold-services'
+  #     command: 'get'
+  #     arguments: 'deployment -o wide'
+  #     secretType: 'dockerRegistry'
+  #     containerRegistryType: 'Azure Container Registry'
+  #     outputFormat: 'none'
+  #   displayName: Showing list of deployment
+  #   continueOnError: true
+  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'hotfix'))
