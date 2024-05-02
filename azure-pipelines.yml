@@ -127,6 +127,157 @@ jobs:
 
   - task: Docker@2
     inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-identity'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/identity.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build Id-Web Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-identity'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push Id-Web Image
+    continueOnError: true
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-identity-api'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/identity-api.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build Id-Api Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-identity-api'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push Id-Api Image
+    continueOnError: true
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-ums'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/ums.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build Id-Ums Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-ums'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker Id-Ums push Image
+    continueOnError: true
+    
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/designer.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-Designer Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-designer'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push BI-Designer Image
+    continueOnError: true
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-etl'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/etl.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-Etl Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/bold-etl'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push BI-Etl Image
+    continueOnError: true
+    
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-server-api'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/server-api.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-API Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-server-api'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push BI-Api Image
+    continueOnError: true
+ 
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-server-jobs'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/server-jobs.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-Jobs Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-server-jobs'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker push BI-Jobs Image
+    continueOnError: true
+    
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-server'
+      command: 'build'
+      Dockerfile: BoldBIEnterpriseEdition-Linux/server.Dockerfile
+      tags: '$(TAG)_dev'
+    displayName: Docker Build BI-Web Image
+    continueOnError: true
+            
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Artifect_Registry'
+      repository: 'boldbi-dev-296107/boldbi/boldbi-server'
+      command: 'push'
+      tags: '$(TAG)_dev'
+    displayName: Docker  push BI-Web Image
+    continueOnError: true
+
+  - task: Docker@2
+    inputs:
       containerRegistry: 'Production Artifact Registry Service Connection'
       repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
       command: 'build'
@@ -168,7 +319,7 @@ jobs:
       script: |
         wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
         
-          sed -i "s/namespace:.*/namespace: boldbi/g" version-config.yaml
+          sed -i "s/namespace:.*/namespace: saledesk-pipeline/g" version-config.yaml
           sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_salesdesk/g" version-config.yaml
           sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_salesdesk/g" version-config.yaml
           sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_salesdesk/g" version-config.yaml
@@ -312,5 +463,5 @@ jobs:
       containerRegistryType: 'Azure Container Registry'
       outputFormat: 'none'
     displayName: Showing list of deployment
-    # continueOnError: true
-    # condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
