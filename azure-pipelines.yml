@@ -27,201 +27,284 @@ jobs:
   #     targetPath: '$(Pipeline.Workspace)'
   #   continueOnError: true
 
-  # - script: |
-  #    wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt -O $(Pipeline.Workspace)/param_value.txt
-  #    ls $(Pipeline.Workspace)
-  #    pwd
-  #    echo "whare I am in"
-  #   displayName: 'Assign k8s values'
+  - script: |
+     wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt -O $(Pipeline.Workspace)/param_value.txt
+     ls $(Pipeline.Workspace)
+     pwd
+     echo "whare I am in"
+    displayName: 'Assign k8s values'
 
-  # - script: |
-  #     KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
-  #     echo "$KubernetesSiteUpdate"
-  #     echo "##vso[task.setvariable variable=Updatek8ssite]$KubernetesSiteUpdate"
-  #     BranchName=$(awk '/Branch:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
-  #     echo "$BranchName"
-  #     echo "##vso[task.setvariable variable=Branch]$BranchName"
-  #   displayName: 'Read Param Value'
+  - script: |
+      KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+      echo "$KubernetesSiteUpdate"
+      echo "##vso[task.setvariable variable=Updatek8ssite]$KubernetesSiteUpdate"
+      BranchName=$(awk '/Branch:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+      echo "$BranchName"
+      echo "##vso[task.setvariable variable=Branch]$BranchName"
+    displayName: 'Read Param Value'
 
-  # - script: |
-  #     KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
-  #     echo "$KubernetesSiteUpdate"
-  #     echo "##vso[task.setvariable variable=Updatek8ssite]$KubernetesSiteUpdate"
-  #     BranchName=$(awk '/Branch:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
-  #     echo "$BranchName"
-  #     echo "##vso[task.setvariable variable=Branch]$BranchName"
-  #   displayName: 'Assign k8s values'
+  - script: |
+      KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+      echo "$KubernetesSiteUpdate"
+      echo "##vso[task.setvariable variable=Updatek8ssite]$KubernetesSiteUpdate"
+      BranchName=$(awk '/Branch:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+      echo "$BranchName"
+      echo "##vso[task.setvariable variable=Branch]$BranchName"
+    displayName: 'Assign k8s values'
 
-  # - script: cat $(Pipeline.Workspace)/param_value.txt
-  # - task: Bash@3
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #         if [ -f $(Pipeline.Workspace)/param_value.txt ]; then
-  #           URL=$(awk '/KubernetesPackage:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
-  #           echo "Text File URL: $URL"
-  #           IMAGE_TAG=$(echo "$URL" | grep -oP 'Linux_Kubernetes_\K[\d\.]+_\d{8}_\d{6}')
-  #           echo "##vso[task.setvariable variable=TAG]$IMAGE_TAG"
-  #           echo Y | gcloud auth configure-docker us-central1-docker.pkg.dev
-  #           sudo wget $URL
-  #           sudo rm -rf $(Pipeline.Workspace)/param_value.txt
-  #           sudo apt install unzip 
-  #           sudo unzip BoldBIEnterpriseEdition_Linux_*
-  #           echo Y | gcloud auth configure-docker us-central1-docker.pkg.dev
-  #         else
-  #           echo "Bold BI Kubernetes Linux Package Does Not Exist"
-  #         fi
-  #   continueOnError: true
+  - script: cat $(Pipeline.Workspace)/param_value.txt
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+          if [ -f $(Pipeline.Workspace)/param_value.txt ]; then
+            URL=$(awk '/KubernetesPackage:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
+            echo "Text File URL: $URL"
+            IMAGE_TAG=$(echo "$URL" | grep -oP 'Linux_Kubernetes_\K[\d\.]+_\d{8}_\d{6}')
+            echo "##vso[task.setvariable variable=TAG]$IMAGE_TAG"
+            echo Y | gcloud auth configure-docker us-central1-docker.pkg.dev
+            sudo wget $URL
+            sudo rm -rf $(Pipeline.Workspace)/param_value.txt
+            sudo apt install unzip 
+            sudo unzip BoldBIEnterpriseEdition_Linux_*
+            echo Y | gcloud auth configure-docker us-central1-docker.pkg.dev
+          else
+            echo "Bold BI Kubernetes Linux Package Does Not Exist"
+          fi
+    continueOnError: true
 
-  # - task: Bash@3
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #       ls
-  #       sudo cp -r data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-  #       sudo cp -r designer-viewer.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-  #       sudo ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-  #   displayName: 'Copy docker files'    
-  #   continueOnError: true
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        ls
+        sudo cp -r data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+        sudo cp -r designer-viewer.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+        sudo ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+    displayName: 'Copy docker files'    
+    continueOnError: true
 
-  # - script: ls BoldBIEnterpriseEdition-Linux  
-  # - task: Bash@3
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #       sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-  #       sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
-  #       sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-  #       sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
-  #       ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
-  #       echo **********
-  #       ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
-  #   displayName: 'Creating a folder and moving files'
-  #   continueOnError: true
+  - script: ls BoldBIEnterpriseEdition-Linux  
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/
+        sudo mkdir -p $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+        sudo cp -r $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/dataservice/* $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/
+        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler
+        echo **********
+        ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer
+    displayName: 'Creating a folder and moving files'
+    continueOnError: true
 
-  # - task: Bash@3
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #       APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
-  #       NEW_APP_PATH="\/bi\/data-scheduler"
-  #       NEW_LOGGER_NAME="bi.data-scheduler"
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/data-scheduler/appsettings.json"
+        NEW_APP_PATH="\/bi\/data-scheduler"
+        NEW_LOGGER_NAME="bi.data-scheduler"
 
-  #       sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-  #       sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
-  #   displayName: 'Updating properties in data-scheduler appsettings'    
-  #   continueOnError: true
+        sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
+        sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+    displayName: 'Updating properties in data-scheduler appsettings'    
+    continueOnError: true
 
-  # - task: Bash@3
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #       APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
-  #       NEW_APP_PATH="\/bi\/viewer"
-  #       NEW_LOGGER_NAME="bi.viewer"
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        APP_SETTINGS_FILE="$(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/application/bi/viewer/appsettings.json"
+        NEW_APP_PATH="\/bi\/viewer"
+        NEW_LOGGER_NAME="bi.viewer"
 
-  #       sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
-  #       sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
-  #   displayName: 'Updating properties in viewer appsettings'    
-  #   continueOnError: true
+        sudo sed -i 's/"AppPath":.*/"AppPath": "'"$NEW_APP_PATH"'",/' "$APP_SETTINGS_FILE"
+        sudo sed -i 's/"Loggername":.*/"Loggername": "'"$NEW_LOGGER_NAME"'",/' "$APP_SETTINGS_FILE"
+    displayName: 'Updating properties in viewer appsettings'    
+    continueOnError: true
 
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'Production Artifact Registry Service Connection'
-  #     repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
-  #     command: 'build'
-  #     Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
-  #     tags: '$(TAG)_salesdesk'
-  #   displayName: Docker Build Id-datascheduler Image
-  #   continueOnError: true
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Production Artifact Registry Service Connection'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
+      command: 'build'
+      Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/data-scheduler.dockerfile
+      tags: '$(TAG)_salesdesk'
+    displayName: Docker Build Id-datascheduler Image
+    continueOnError: true
             
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'Production Artifact Registry Service Connection'
-  #     repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
-  #     command: 'push'
-  #     tags: '$(TAG)_salesdesk'
-  #   displayName: Docker push Id-datascheduler Image
-  #   continueOnError: true
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Production Artifact Registry Service Connection'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-datascheduler'
+      command: 'push'
+      tags: '$(TAG)_salesdesk'
+    displayName: Docker push Id-datascheduler Image
+    continueOnError: true
 
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'Production Artifact Registry Service Connection'
-  #     repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
-  #     command: 'build'
-  #     Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/designer-viewer.dockerfile
-  #     tags: '$(TAG)_salesdesk'
-  #   displayName: Docker Build Id-designer-viewer Image
-  #   continueOnError: true
-  # - task: Docker@2
-  #   inputs:
-  #     containerRegistry: 'Production Artifact Registry Service Connection'
-  #     repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
-  #     command: 'push'
-  #     tags: '$(TAG)_salesdesk'
-  #   displayName: Docker push Id-designer-viewer Image
-  #   continueOnError: true
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Production Artifact Registry Service Connection'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
+      command: 'build'
+      Dockerfile: $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux/designer-viewer.dockerfile
+      tags: '$(TAG)_salesdesk'
+    displayName: Docker Build Id-designer-viewer Image
+    continueOnError: true
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'Production Artifact Registry Service Connection'
+      repository: 'boldbi-294612/boldbi/bi-dataservice-viewer'
+      command: 'push'
+      tags: '$(TAG)_salesdesk'
+    displayName: Docker push Id-designer-viewer Image
+    continueOnError: true
 
-  # - task: Bash@3
-  #   inputs:
-  #     targetType: 'inline'
-  #     script: |
-  #       wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        wget https://raw.githubusercontent.com/boldbi/boldbi-kubernetes/main/deploy/version-config.yaml
         
-  #         sed -i "s/namespace:.*/namespace: boldbi/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #         sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_salesdesk/g" version-config.yaml
-  #   displayName: Update version configmap
-  #   continueOnError: true
-  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
-
-
-  # - task: Kubernetes@1
-  #   inputs:
-  #     connectionType: 'Kubernetes Service Connection'
-  #     kubernetesServiceEndpoint: 'kubernetes-cluster'
-  #     namespace: 'saledesk-pipeline'
-  #     command: 'apply'
-  #     arguments: '-f version-config.yaml'
-  #     secretType: 'dockerRegistry'
-  #     containerRegistryType: 'Azure Container Registry'
-  #     outputFormat: 'none'
-  #   displayName: Apply version configmap
-  #   continueOnError: true
-  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
-  # - task: Kubernetes@1
-  #   inputs:
-  #     connectionType: 'Kubernetes Service Connection'
-  #     kubernetesServiceEndpoint: 'kubernetes-cluster'
-  #     namespace: 'saledesk-pipeline'
-  #     command: 'set'
-  #     arguments: 'image deployment/bi-dataservice-datascheduler-deployment bi-dataservice-datascheduler-container=us-docker.pkg.dev/boldbi-294612/boldbi/bi-dataservice-datascheduler:$(TAG)_salesdesk'
-  #     outputFormat: 'none'
-  #   displayName: Update Bi-Datascheduler Image tag
-  #   continueOnError: true
-  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
-
-  # - task: Kubernetes@1
-  #   inputs:
-  #     connectionType: 'Kubernetes Service Connection'
-  #     kubernetesServiceEndpoint: 'kubernetes-cluster'
-  #     namespace: 'saledesk-pipeline'
-  #     command: 'set'
-  #     arguments: 'image deployment/bi-dataservice-viewer-deployment bi-dataservice-viewer-container=us-docker.pkg.dev/boldbi-294612/boldbi/bi-dataservice-viewer:$(TAG)_salesdesk'
-  #     outputFormat: 'none'
-  #   displayName: Update Bi-Designer Image tag
-  #   continueOnError: true
-  #   condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+          sed -i "s/namespace:.*/namespace: boldbi/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_API_VERSION:.*/BOLD_SERVICES_BI_API_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_DESIGNER_VERSION:.*/BOLD_SERVICES_BI_DESIGNER_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_JOBS_VERSION:.*/BOLD_SERVICES_BI_JOBS_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_BI_WEB_VERSION:.*/BOLD_SERVICES_BI_WEB_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_ID_API_VERSION:.*/BOLD_SERVICES_ID_API_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_ID_WEB_VERSION:.*/BOLD_SERVICES_ID_WEB_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+          sed -i "s/BOLD_SERVICES_UMS_WEB_VERSION:.*/BOLD_SERVICES_UMS_WEB_VERSION: $(TAG)_salesdesk/g" version-config.yaml
+    displayName: Update version configmap
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'apply'
+      arguments: '-f version-config.yaml'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
+      outputFormat: 'none'
+    displayName: Apply version configmap
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+      
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/id-web-deployment id-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Id-Web Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+    
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/id-api-deployment id-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-identity-api:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Id-Api Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+    
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/id-ums-deployment id-ums-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/bold-ums:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Id-ums Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
 
   - task: Kubernetes@1
     inputs:
       connectionType: 'Kubernetes Service Connection'
-      kubernetesServiceEndpoint: 'kubernetes-cluster'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/bi-web-deployment bi-web-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Bi-Web Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/bi-api-deployment bi-api-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-api:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Bi-Api Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/bi-jobs-deployment bi-jobs-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-server-jobs:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Bi-Jobs Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/bi-dataservice-deployment bi-dataservice-container=us-central1-docker.pkg.dev/boldbi-dev-296107/boldbi/boldbi-designer:$(TAG)_dev'
+      outputFormat: 'none'
+    displayName: Update Bi-Designer Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/bi-dataservice-datascheduler-deployment bi-dataservice-datascheduler-container=us-docker.pkg.dev/boldbi-294612/boldbi/bi-dataservice-datascheduler:$(TAG)_salesdesk'
+      outputFormat: 'none'
+    displayName: Update Bi-Datascheduler Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
+      namespace: 'saledesk-pipeline'
+      command: 'set'
+      arguments: 'image deployment/bi-dataservice-viewer-deployment bi-dataservice-viewer-container=us-docker.pkg.dev/boldbi-294612/boldbi/bi-dataservice-viewer:$(TAG)_salesdesk'
+      outputFormat: 'none'
+    displayName: Update Bi-Designer Image tag
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'kubernetes-service-connection'
       namespace: 'saledesk-pipeline'
       command: 'get'
       arguments: 'deployment -o wide'
