@@ -180,6 +180,20 @@ jobs:
     continueOnError: true
     condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
 
+
+  - task: Kubernetes@1
+    inputs:
+      connectionType: 'Kubernetes Service Connection'
+      kubernetesServiceEndpoint: 'Kubernetes Service Connection'
+      namespace: 'saledesk-pipeline'
+      command: 'apply'
+      arguments: '-f version-config.yaml'
+      secretType: 'dockerRegistry'
+      containerRegistryType: 'Azure Container Registry'
+      outputFormat: 'none'
+    displayName: Apply version configmap
+    continueOnError: true
+    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
   - task: Kubernetes@1
     inputs:
       connectionType: 'Kubernetes Service Connection'
