@@ -229,5 +229,5 @@ jobs:
       containerRegistryType: 'Azure Container Registry'
       outputFormat: 'none'
     displayName: Showing list of deployment
-    continueOnError: true
-    condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
+    # continueOnError: true
+    # condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
