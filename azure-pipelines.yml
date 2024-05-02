@@ -184,11 +184,11 @@ jobs:
     inputs:
       connectionType: 'Kubernetes Service Connection'
       kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'saledesk-pipline'
+      namespace: 'saledesk-pipeline'
       command: 'set'
       arguments: 'image deployment/bi-dataservice-datascheduler-deployment bi-dataservice-datascheduler-container=us-docker.pkg.dev/boldbi-294612/boldbi/bi-dataservice-datascheduler:$(TAG)_salesdesk'
       outputFormat: 'none'
-    displayName: Update Bi-Jobs Image tag
+    displayName: Update Bi-Datascheduler Image tag
     continueOnError: true
     condition: and(eq(variables['Updatek8ssite'], 'True'), contains(variables['Branch'], 'salesdesk'))
 
@@ -196,7 +196,7 @@ jobs:
     inputs:
       connectionType: 'Kubernetes Service Connection'
       kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'saledesk-pipline'
+      namespace: 'saledesk-pipeline'
       command: 'set'
       arguments: 'image deployment/bi-dataservice-viewer-deployment bi-dataservice-viewer-container=us-docker.pkg.dev/boldbi-294612/boldbi/bi-dataservice-viewer:$(TAG)_salesdesk'
       outputFormat: 'none'
@@ -208,7 +208,7 @@ jobs:
     inputs:
       connectionType: 'Kubernetes Service Connection'
       kubernetesServiceEndpoint: 'Kubernetes Service Connection'
-      namespace: 'saledesk-pipline'
+      namespace: 'saledesk-pipeline'
       command: 'get'
       arguments: 'deployment -o wide'
       secretType: 'dockerRegistry'
