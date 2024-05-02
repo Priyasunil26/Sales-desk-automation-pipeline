@@ -3,7 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-
 trigger: none 
 
 variables:
@@ -14,25 +13,19 @@ jobs:
   pool:
    vmImage: ubuntu-latest
   steps:
-  # - task: DownloadPipelineArtifact@2 
-  #   inputs: 
-  #     buildType: 'specific'
-  #     project: 'a7a9079d-03ad-44f5-8677-e9ec44b5ba3d' 
-  #     definition: '12' 
-  #     specificBuildWithTriggering: true
-  #     buildVersionToDownload: 'latest'
-  #     allowPartiallySucceededBuilds: true 
-  #     allowFailedBuilds: true 
-  #     artifactName: 'manifest'
-  #     targetPath: '$(Pipeline.Workspace)'
-  #   continueOnError: true
-
-  - script: |
-     wget https://raw.githubusercontent.com/Priyasunil26/Sales-desk-automation-pipeline/main/param_value.txt -O $(Pipeline.Workspace)/param_value.txt
-     ls $(Pipeline.Workspace)
-     pwd
-     echo "whare I am in"
-    displayName: 'Assign k8s values'
+  - task: DownloadPipelineArtifact@2 
+    inputs: 
+      buildType: 'specific'
+      project: 'a7a9079d-03ad-44f5-8677-e9ec44b5ba3d' 
+      definition: '12' 
+      specificBuildWithTriggering: true
+      buildVersionToDownload: 'latest'
+      allowPartiallySucceededBuilds: true 
+      allowFailedBuilds: true 
+      artifactName: 'manifest'
+      targetPath: '$(Pipeline.Workspace)'
+    displayName: 'Download Build artifact'
+    continueOnError: true
 
   - script: |
       KubernetesSiteUpdate=$(awk '/Kubernetes:/ {print $2}' $(Pipeline.Workspace)/param_value.txt)
@@ -42,8 +35,6 @@ jobs:
       echo "$BranchName"
       echo "##vso[task.setvariable variable=Branch]$BranchName"
     displayName: 'Read Param Value'
-
-  - script: cat $(Pipeline.Workspace)/param_value.txt
   - task: Bash@3
     inputs:
       targetType: 'inline'
@@ -62,6 +53,7 @@ jobs:
           else
             echo "Bold BI Kubernetes Linux Package Does Not Exist"
           fi
+    displayName: 'Read Param Value'
     continueOnError: true
 
   - task: Bash@3
