@@ -56,16 +56,16 @@ jobs:
     displayName: 'Read Param Value'
     continueOnError: true
 
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: |
-        ls
-        sudo cp -r data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-        sudo cp -r designer-viewer.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-        sudo ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
-    displayName: 'Copy docker files'    
-    continueOnError: true
+  # - task: Bash@3
+  #   inputs:
+  #     targetType: 'inline'
+  #     script: |
+  #       ls
+  #       sudo cp -r data-scheduler.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+  #       sudo cp -r designer-viewer.dockerfile $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+  #       sudo ls $(Pipeline.Workspace)/s/BoldBIEnterpriseEdition-Linux
+  #   displayName: 'Copy docker files'    
+  #   continueOnError: true
 
   - script: ls BoldBIEnterpriseEdition-Linux  
   - task: Bash@3
